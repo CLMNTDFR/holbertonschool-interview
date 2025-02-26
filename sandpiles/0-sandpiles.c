@@ -1,109 +1,142 @@
 #include "sandpiles.h"
 
 /**
- * my_print_grid - Prints the grid
-  * @grid: The grid to print
-   */
-   void my_print_grid(int grid[3][3])
-   {
-   	int i = 0, j = 0;
+* print_grid - Prints a 3 x 3 grid
+*
+* @grid: 3 x 3 grid
+*
+* Return: Void
+*/
+void print_grid(int grid[3][3])
+{
+	int row, col;
 
-    	printf("=\n");
+	printf("=\n");
+	for (row = 0; row < 3; row++)
+	{
+		for (col = 0; col < 3; col++)
+		{
+			if (col)
+				printf(" ");
+			printf("%d", grid[row][col]);
+		}
+		printf("\n");
+	}
+}
 
-        	for (i = 0; i < 3; i++)
-            	{
-                		for (j = 0; j < 3; j++)
-                        		{
-                                			printf("%d", grid[i][j]);
-                                            			if (j < 2)
-                                                        				putchar(' ');
-                                                                        		}
-                                                                                		putchar('\n');
-                                                                                        	}
-                                                                                            }
+/**
+* is_stable - Check if square has more than 3 grains
+*
+* @grid: 3 x 3 grid
+*
+* Return: 0 if stable, 1 if unstable
+*/
+int is_stable(int grid[3][3])
+{
+	int row, col;
 
-                                                                                            /**
-                                                                                             * topple_grid - Takes care of the toppling that would occur
-                                                                                              * @grid: The grid in where the toppling is occurring
-                                                                                               * @toppleLocations: Specifically where the toppling is occurring
-                                                                                                */
-                                                                                                void topple_grid(int grid[3][3], int toppleLocations[3][3])
-                                                                                                {
-                                                                                                	int i = 0, j = 0;
+	for (row = 0; row < 3; row++)
+	{
+		for (col = 0; col < 3; col++)
+		{
+			if (grid[row][col] > 3)
+			{
+				return (0);
+			}
+		}
+	}
+	return (1);
+}
 
-                                                                                                    	for (i = 0; i < 3; i++)
-                                                                                                        	{
-                                                                                                            		for (j = 0; j < 3; j++)
-                                                                                                                    		{
-                                                                                                                            			if (toppleLocations[i][j] == 1)
-                                                                                                                                        			{
-                                                                                                                                                    				grid[i][j] = grid[i][j] - 4;
-                                                                                                                                                                    				if (i > 0)
-                                                                                                                                                                                    					grid[i - 1][j] = grid[i - 1][j] + 1;
-                                                                                                                                                                                                        				if (i < 2)
-                                                                                                                                                                                                                        					grid[i + 1][j] = grid[i + 1][j] + 1;
-                                                                                                                                                                                                                                            				if (j > 0)
-                                                                                                                                                                                                                                                            					grid[i][j - 1] = grid[i][j - 1] + 1;
-                                                                                                                                                                                                                                                                                				if (j < 2)
-                                                                                                                                                                                                                                                                                                					grid[i][j + 1] = grid[i][j + 1] + 1;
-                                                                                                                                                                                                                                                                                                                    			}
-                                                                                                                                                                                                                                                                                                                                		}
-                                                                                                                                                                                                                                                                                                                                        	}
-                                                                                                                                                                                                                                                                                                                                            }
+/**
+* topple - Partitions grains from squares greater than 3
+*
+* @grid1: 3 x 3 board
+*
+* @grid2: 3 x 3 board
+*
+* Return: Void
+*/
+void topple(int grid1[3][3], int grid2[3][3])
+{
+	int row, col;
 
-                                                                                                                                                                                                                                                                                                                                            /**
-                                                                                                                                                                                                                                                                                                                                             * sandpiles_sum - Computes sum of two sandpiles
-                                                                                                                                                                                                                                                                                                                                              * @grid1: The first grid to add, where new grid will be saved
-                                                                                                                                                                                                                                                                                                                                               * @grid2: The second grid to add
-                                                                                                                                                                                                                                                                                                                                                */
-                                                                                                                                                                                                                                                                                                                                                void sandpiles_sum(int grid1[3][3], int grid2[3][3])
-                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                	int i = 0, j = 0, flag = 0;
-                                                                                                                                                                                                                                                                                                                                                    	int toppleLocations[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+	for (row = 0; row < 3; row++)
+	{
+		for (col = 0; col < 3; col++)
+		{
+			if (grid1[row][col] > 3)
+			{
+				/* Send one grain of sand off the grid */
+				grid2[row][col] -= 4;
+				/* Send one grain of sand up */
+				if (row - 1 >= 0)
+				{
+					grid2[row - 1][col]++;
+				}
+				/* Send one grain of sand down */
+				if (row + 1 <= 2)
+				{
+					grid2[row + 1][col]++;
+				}
 
-                                                                                                                                                                                                                                                                                                                                                        	for (i = 0; i < 3; i++)
-                                                                                                                                                                                                                                                                                                                                                            		for (j = 0; j < 3; j++)
-                                                                                                                                                                                                                                                                                                                                                                    			grid1[i][j] = grid1[i][j] + grid2[i][j];
+				/* Send one grain of sand left */
+				if (col - 1 >= 0)
+				{
+					grid2[row][col - 1]++;
+				}
 
-                                                                                                                                                                                                                                                                                                                                                                                	while (1)
-                                                                                                                                                                                                                                                                                                                                                                                    	{
-                                                                                                                                                                                                                                                                                                                                                                                        		flag = 0;
+				/* Send one grain of sand right */
+				if (col + 1 <= 2)
+				{
+					grid2[row][col + 1]++;
+				}
+			}
+		}
+	}
+	add_sandpile(grid1, grid2);
+}
 
-                                                                                                                                                                                                                                                                                                                                                                                                		for (i = 0; i < 3; i++)
-                                                                                                                                                                                                                                                                                                                                                                                                        		{
-                                                                                                                                                                                                                                                                                                                                                                                                                			for (j = 0; j < 3; j++)
-                                                                                                                                                                                                                                                                                                                                                                                                                            			{
-                                                                                                                                                                                                                                                                                                                                                                                                                                        				if (grid1[i][j] > 3)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                        				{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        					toppleLocations[i][j] = 1;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            					flag = 1;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                				{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                					toppleLocations[i][j] = 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    				}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    			}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                		}
+/**
+* add_sandpile - Add two 3 x 3 grid sandpiles
+*
+* @grid1: 3 x 3 board
+*
+* @grid2: 3 x 3 board
+*
+* Return: Return value
+*/
+void add_sandpile(int grid1[3][3], int grid2[3][3])
+{
+	int row, col;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        		if (flag == 0)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                			return;
+	for (row = 0; row < 3; row++)
+	{
+		for (col = 0; col < 3; col++)
+		{
+			grid1[row][col] += grid2[row][col];
+			grid2[row][col] = 0;
+		}
+	}
+}
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            		my_print_grid(grid1);
+/**
+* sandpiles_sum - Computes the sum of sanpiles
+*
+* @grid1: 3 x 3 board
+*
+* @grid2: 3 x 3 board
+*
+* Return: Void
+*/
+void sandpiles_sum(int grid1[3][3], int grid2[3][3])
+{
+	add_sandpile(grid1, grid2);
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    		topple_grid(grid1, toppleLocations);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            	}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                /*
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * THOUGHT PROCESS NOTES:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Create a list (?) to keep track of points that need to topple, set to NULL
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Add the two grids onto grid1
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * This is all in one loop going on forever (as else will tell when to stop)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Loop through grid1 and save into list each point that needs to topple
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * If list length > 0 then
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *	print grid
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *	loop through list and topple each point saved
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *	once done with loop then set list to 0
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * else (list length == 0 and is empty)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *	return (to end this function as loops forever)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	/* Topple piles accordingly when grid is unstable and print each time */
+	while (!is_stable(grid1))
+	{
+		print_grid(grid1);
+		topple(grid1, grid2);
+	}
+}
