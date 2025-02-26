@@ -1,5 +1,5 @@
 # holbertonschool-interview
 
-sandpiles
+algo
 
 Author: Clément Defer
