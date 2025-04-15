@@ -1,5 +1,3 @@
-<img src="https://github.com/Qcarvalhooliveira/holbertonschool-interview/blob/main/lockboxes/images/Lockboxes.png" width="1000" height="300">
-
 # **Lockboxes** :computer:
 
 ## **Description**:speech_balloon:
